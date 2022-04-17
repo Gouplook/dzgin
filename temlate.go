@@ -17,8 +17,7 @@ import (
 )
 
 var (
-	beegoTplFuncMap = make(template.FuncMap)
-
+	beegoTplFuncMap           = make(template.FuncMap)
 	beeViewPathTemplateLocked = false
 	// beeViewPathTemplates caching map and supported template file extensions per view
 	beeViewPathTemplates = make(map[string]map[string]*template.Template)
