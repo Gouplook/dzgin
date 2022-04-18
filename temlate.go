@@ -40,7 +40,7 @@ var (
 // writing the output to wr.
 // A template will be executed safely in parallel.
 func ExecuteViewPathTemplate(wr io.Writer, name string, viewPath string, data interface{}) error {
-	if KcConfig.RunMode != PROD {
+	if DzConfig.RunMode != PROD {
 		templatesLock.RLock()
 		defer templatesLock.RUnlock()
 	}
@@ -245,7 +245,7 @@ func getTplDeep(root string, fs http.FileSystem, file string, parent string, t *
 	if err != nil {
 		return nil, [][]string{}, err
 	}
-	reg := regexp.MustCompile(KcConfig.WebConfig.TemplateLeft + "[ ]*template[ ]+\"([^\"]+)\"")
+	reg := regexp.MustCompile(DzConfig.WebConfig.TemplateLeft + "[ ]*template[ ]+\"([^\"]+)\"")
 	allSub := reg.FindAllStringSubmatch(string(data), -1)
 	for _, m := range allSub {
 		if len(m) == 2 {
@@ -266,7 +266,7 @@ func getTplDeep(root string, fs http.FileSystem, file string, parent string, t *
 }
 
 func getTemplate(root string, fs http.FileSystem, file string, others ...string) (t *template.Template, err error) {
-	t = template.New(file).Delims(KcConfig.WebConfig.TemplateLeft, KcConfig.WebConfig.TemplateRight).Funcs(beegoTplFuncMap)
+	t = template.New(file).Delims(DzConfig.WebConfig.TemplateLeft, DzConfig.WebConfig.TemplateRight).Funcs(beegoTplFuncMap)
 	var subMods [][]string
 	t, subMods, err = getTplDeep(root, fs, file, "", t)
 	if err != nil {
@@ -317,7 +317,7 @@ func _getTemplate(t0 *template.Template, root string, fs http.FileSystem, subMod
 					logs.Trace("template file parse error, not success read file:", err)
 					continue
 				}
-				reg := regexp.MustCompile(KcConfig.WebConfig.TemplateLeft + "[ ]*define[ ]+\"([^\"]+)\"")
+				reg := regexp.MustCompile(DzConfig.WebConfig.TemplateLeft + "[ ]*define[ ]+\"([^\"]+)\"")
 				allSub := reg.FindAllStringSubmatch(string(data), -1)
 				for _, sub := range allSub {
 					if len(sub) == 2 && sub[1] == m[1] {
@@ -355,7 +355,7 @@ func defaultFSFunc() http.FileSystem {
 //
 // // SetViewsPath sets view directory path in beego application.
 // func SetViewsPath(path string) *App {
-// 	KcConfig.WebConfig.ViewsPath = path
+// 	DzConfig.WebConfig.ViewsPath = path
 // 	return BeeApp
 // }
 //
@@ -368,7 +368,7 @@ func defaultFSFunc() http.FileSystem {
 // 	if url != "/" {
 // 		url = strings.TrimRight(url, "/")
 // 	}
-// 	KcConfig.WebConfig.StaticDir[url] = path
+// 	DzConfig.WebConfig.StaticDir[url] = path
 // 	return BeeApp
 // }
 //
@@ -380,7 +380,7 @@ func defaultFSFunc() http.FileSystem {
 // 	if url != "/" {
 // 		url = strings.TrimRight(url, "/")
 // 	}
-// 	delete(KcConfig.WebConfig.StaticDir, url)
+// 	delete(DzConfig.WebConfig.StaticDir, url)
 // 	return BeeApp
 // }
 //
